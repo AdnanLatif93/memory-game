@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Card } from 'src/app/interfaces/card';
 
 @Component({
   selector: 'app-card',
@@ -6,19 +7,29 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
   styleUrls: ['./card.component.scss']
 })
 export class CardComponent implements OnInit {
-  @Input() value: string = '';
+  @Input() cardValue: Card = {
+    id: 0,
+    content: '',
+    isFlipped: false,
+    isMatched: false,
+    imageUrl: ''
+  };
   @Input() isFlipped: boolean = false;
   @Input() isMatched: boolean = false;
-  @Output() cardClicked = new EventEmitter<void>();
+  @Output() cardClicked = new EventEmitter<Card>();
   constructor() { }
 
   ngOnInit(): void {
   }
 
-  flipCard() {
-    if (!this.isFlipped && !this.isMatched) {
-      this.cardClicked.emit();
+  flipCard(cardValue:Card) {
+    if(this.isFlipped && !this.isMatched){
+      cardValue.isFlipped = false;
     }
+    if (!this.isFlipped && !this.isMatched) {
+      cardValue.isFlipped = true;
+    }
+    this.cardClicked.emit(cardValue);
   }
 
 }

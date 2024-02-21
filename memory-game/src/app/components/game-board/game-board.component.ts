@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { CardsLookup } from 'src/app/constants/cards.lookup';
+import { CardListInterface } from 'src/app/interfaces/card';
 
 @Component({
   selector: 'app-game-board',
@@ -6,11 +8,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./game-board.component.scss']
 })
 export class GameBoardComponent implements OnInit {
-  players = [
-    { name: 'Player 1', points: 0 },
-    { name: 'Player 2', points: 0 },
-  ];
-  cards: { value: string; isFlipped: boolean; isMatched: boolean }[] = [];
+  cardsLookup: Array<CardListInterface> = CardsLookup;
   isGameFinished = false;
 
   constructor() {
@@ -26,6 +24,15 @@ export class GameBoardComponent implements OnInit {
   }
 
   onCardClick(card: any) {
+    console.log(card)
+    if (card && card.isFlipped) {
+      const foundCard = this.cardsLookup[0].cards?.find((e: any) => { return e == card });
+
+      if (foundCard) {
+        foundCard.isMatched = true;
+      }
+    }
+
     // Handle the card click logic (flipping, matching, scoring, etc.)
     // Check if the game is finished
     // Update player points and switch turns
