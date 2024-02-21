@@ -4,7 +4,7 @@ export const CardsLookup: Array<CardListInterface> = [
     {
         "player1Score": 0,
         "player2Score": 0,
-        "currentPlayer": 1,
+        "currentPlayer": '',
         "cards": [
             {
                 "id": 13,

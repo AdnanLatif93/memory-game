@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CardsLookup } from 'src/app/constants/cards.lookup';
-import { CardListInterface } from 'src/app/interfaces/card';
+import { Card, CardListInterface } from 'src/app/interfaces/card';
 
 @Component({
   selector: 'app-game-board',
@@ -10,7 +10,8 @@ import { CardListInterface } from 'src/app/interfaces/card';
 export class GameBoardComponent implements OnInit {
   cardsLookup: Array<CardListInterface> = CardsLookup;
   isGameFinished = false;
-
+  player1 = "Player 1";
+  player2 = "Player 2";
   constructor() {
     this.startNewGame();
   }
@@ -19,23 +20,45 @@ export class GameBoardComponent implements OnInit {
   startNewGame() {
     // Initialize the cards array and other necessary variables
     this.isGameFinished = false;
-    // Shuffle the cards (you can implement a shuffle function)
+    this.cardsLookup[0].currentPlayer = this.player1;
+    ;    // Shuffle the cards (you can implement a shuffle function)
     // Assign the cards to the board
   }
 
-  onCardClick(card: any) {
-    console.log(card)
-    if (card && card.isFlipped) {
-      const foundCard = this.cardsLookup[0].cards?.find((e: any) => { return e == card });
-
-      if (foundCard) {
-        foundCard.isMatched = true;
+  flippedCards: Card[] = [];
+  onCardClick(card: Card) {
+    if (!card.isMatched && !card.isFlipped && this.flippedCards.length < 2) {
+      card.isFlipped = true;
+      this.flippedCards.push(card);
+      if (this.flippedCards.length === 2) {
+        const [firstCard, secondCard] = this.flippedCards;
+        if (firstCard.content === secondCard.content) {
+          setTimeout(() => {
+            this.flippedCards.forEach((flippedCard) => (flippedCard.isMatched = true));
+            this.flippedCards = [];
+            if (this.cardsLookup[0].currentPlayer == this.player1) {
+              this.cardsLookup[0].player1Score += 1;
+            } else {
+              this.cardsLookup[0].player2Score += 1;
+            }
+          }, 1000)
+        } else {
+          setTimeout(() => {
+            this.flippedCards.forEach((flippedCard) => {
+              flippedCard.isFlipped = false;
+            });
+            this.flippedCards = [];
+          }, 1000);
+          this.cardsLookup[0].currentPlayer = this.cardsLookup[0].currentPlayer === this.player2 ? this.player1 : this.player2;
+        }
       }
     }
+    const allCardsMatched = this.cardsLookup.every((group) =>
+      group.cards?.every((c) => c.isMatched)
+    );
 
-    // Handle the card click logic (flipping, matching, scoring, etc.)
-    // Check if the game is finished
-    // Update player points and switch turns
+    if (allCardsMatched) {
+      this.isGameFinished = true;
+    }
   }
-
 }

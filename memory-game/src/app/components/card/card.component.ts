@@ -23,13 +23,10 @@ export class CardComponent implements OnInit {
   }
 
   flipCard(cardValue:Card) {
-    if(this.isFlipped && !this.isMatched){
-      cardValue.isFlipped = false;
-    }
     if (!this.isFlipped && !this.isMatched) {
-      cardValue.isFlipped = true;
+      this.cardClicked.emit(cardValue);
     }
-    this.cardClicked.emit(cardValue);
+    
   }
 
 }

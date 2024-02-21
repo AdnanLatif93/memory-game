@@ -1,9 +1,9 @@
 
 export interface CardListInterface {
   cards?: Card[]
-  player1Score?: number
-  player2Score?: number
-  currentPlayer?: number
+  player1Score: number
+  player2Score: number
+  currentPlayer?: string
 }
 
 export interface Card {
